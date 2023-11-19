@@ -23,11 +23,25 @@ function ModifyList() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const fetchDataFromServer = async () => {
+    try {
+      const response = await axios.get('http://localhost:5175/product/data'); 
+      if (response.status === 200) {
+        setProducts(response.data);
+        console.log(response.data)
+      } else {
+        console.error('Failed to fetch data from the server');
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching data:', error);
+    }
+  };
+
+ 
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then((data) => data.json())
-      .then((result) => setProducts(result));
-  }, []);
+    fetchDataFromServer();
+  }, []); 
+
 
   const handleEdit = (product) => {
     setSelectedProduct(product);
@@ -103,12 +117,12 @@ function ModifyList() {
               <div className="text-center">
                 <Card.Img
                   variant="top"
-                  src={product.image}
+                  src={product.imagelink}
                   style={{ width: '100px', height: '130px', padding: '5px' }}
                 />
               </div>
               <Card.Body>
-                <Card.Title>{product.title}</Card.Title>
+                <Card.Title>{product.productname}</Card.Title>
                 <Card.Text style={{ display: 'flex', justifyContent: 'flex-end', fontWeight: '700' }}>
                   {product.price}
                 </Card.Text>
