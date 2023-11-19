@@ -14,6 +14,7 @@ import CartPage from './components/CartPage'
 import CheckoutPage from './components/CheckoutPage'
 import Filteration from './components/Filteration'
 import Review from './components/Review'
+import AdminDashBoard from './components/AdminDashBoard'
 
 function App() {
   const [products, setProducts] = useState([
@@ -62,10 +63,11 @@ function App() {
   return (
     <>
     <Router>
-         <NavBar/>
+         {/* <NavBar/> */}
+         <AdminDashBoard/>
          {/* <Category/> */}
-         {/* <AddProducts/> */}
-          {/* <ModifyList/> */}
+        
+          
           {/* <UserList/> */}
           {/* <Wishlist/> */}
           {/* <CartPage/> */}
@@ -77,6 +79,8 @@ function App() {
             <Route path='/signup' element={<SignUp/>}/>
             <Route path='/contact' element={<ContactUs/>}/>
             <Route path='/branches' element={<Branches/>}/>
+            <Route path='/addproduct' element={ <AddProducts/>}/>
+            <Route path='/manageproduct' element={<ModifyList/>}/>
         </Routes>
     </Router>
      
