@@ -1,12 +1,14 @@
 import React, {useState}from 'react'
 import {Form,Button, FormGroup, FormLabel, FormControl} from 'react-bootstrap'
 import '../styles/login.css'
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 function Login() {
     const [formData,setFormData]=useState({
         email:"",
         password:""
     });
+    const navigate = useNavigate(); // Initialize useNavigate hook
     const handleonchange =(e)=>{
     
       const{name,value} = e.target
@@ -16,7 +18,24 @@ function Login() {
     }
     const handlesubmit=(event)=>{
         event.preventDefault()
-        console.log(formData)
+       
+        axios.post('http://localhost:5175/login/', formData)
+            .then(response => {
+                console.log('Login successful:', response.data);
+                if (response.data.status) {
+                    alert('Login Successful');
+                    if (response.data.role === 'admin') {
+                        navigate('/admin-dashboard'); // Redirect to the admin dashboard
+                    } else {
+                        navigate('/user-dashboard'); // Redirect to the user dashboard
+                    }
+                } else {
+                    alert('Invalid Username or Password');
+                }
+            })
+            .catch(error => {
+                console.error('Login failed:', error);
+            });
         setFormData({
             email:"",
             password:""
@@ -24,7 +43,7 @@ function Login() {
     }
   return (
     <div className='login'>
-         <h2>Add Products</h2>
+         <h2>Login</h2>
     <Form onSubmit={handlesubmit}>
         <FormGroup>
             <FormLabel>Email</FormLabel>
