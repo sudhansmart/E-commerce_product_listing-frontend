@@ -3,7 +3,11 @@ import {Form,Button, FormGroup, FormLabel, FormControl} from 'react-bootstrap'
 import '../styles/login.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 function Login({onLoginSuccess}) {
+=======
+function Login() {
+>>>>>>> ef9f390980d6e6d0cf8195c743e2e69297a0403e
     const [formData,setFormData]=useState({
         email:"",
         password:""
@@ -22,7 +26,10 @@ function Login({onLoginSuccess}) {
         axios.post('http://localhost:5175/login/', formData)
             .then(response => {
                 console.log('Login successful:', response.data);
+<<<<<<< HEAD
                 onLoginSuccess(response.data.role);
+=======
+>>>>>>> ef9f390980d6e6d0cf8195c743e2e69297a0403e
                 if (response.data.status) {
                     alert('Login Successful');
                     if (response.data.role === 'admin') {

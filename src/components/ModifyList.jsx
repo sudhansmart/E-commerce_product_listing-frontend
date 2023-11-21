@@ -24,9 +24,16 @@ function ModifyList() {
 
   const fetchDataFromServer = async () => {
     try {
+<<<<<<< HEAD
       const response = await axios.get('http://localhost:5175/product/data');
       if (response.status === 200) {
         setProducts(response.data);
+=======
+      const response = await axios.get('http://localhost:5175/product/data'); 
+      if (response.status === 200) {
+        setProducts(response.data);
+        console.log(response.data)
+>>>>>>> ef9f390980d6e6d0cf8195c743e2e69297a0403e
       } else {
         console.error('Failed to fetch data from the server');
       }
@@ -35,9 +42,17 @@ function ModifyList() {
     }
   };
 
+<<<<<<< HEAD
   useEffect(() => {
     fetchDataFromServer();
   }, []);
+=======
+ 
+  useEffect(() => {
+    fetchDataFromServer();
+  }, []); 
+
+>>>>>>> ef9f390980d6e6d0cf8195c743e2e69297a0403e
 
   const handleEdit = (product) => {
     setSelectedProduct(product);
@@ -140,9 +155,13 @@ function ModifyList() {
               </div>
               <Card.Body>
                 <Card.Title>{product.productname}</Card.Title>
+<<<<<<< HEAD
                 <Card.Text
                   style={{ display: 'flex', justifyContent: 'flex-end', fontWeight: '700' }}
                 >
+=======
+                <Card.Text style={{ display: 'flex', justifyContent: 'flex-end', fontWeight: '700' }}>
+>>>>>>> ef9f390980d6e6d0cf8195c743e2e69297a0403e
                   {product.price}
                 </Card.Text>
               </Card.Body>
