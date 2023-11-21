@@ -4,7 +4,7 @@ import '../styles/addproduct.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faIndianRupee } from '@fortawesome/free-solid-svg-icons';
 import { Form } from 'react-bootstrap';
-// import axios from 'axios';
+import axios from 'axios';
 
 function AddProducts() {
   const [formData, setFormData] = useState({
@@ -62,7 +62,7 @@ function AddProducts() {
   };
 
   const validateDescription = (description) => {
-    const alphaPattern = /^[A-Za-z0-9.,:;]+$/;
+    const alphaPattern = /[A-Za-z0-9.,:;]/;
     return alphaPattern.test(description);
   };
 
@@ -80,7 +80,7 @@ function AddProducts() {
   };
 
   const validateProductspec = (productspec) => {
-    const alphaPattern = /^[A-Za-z:.,;0-9]+$/;
+    const alphaPattern = /[A-Za-z:.,;0-9]/;
     return alphaPattern.test(productspec);
   };
 
@@ -119,7 +119,7 @@ function AddProducts() {
       sizeValid &&
       subcategoryValid
     ) {
-      //   axios.post('http://localhost:5174/addBike', formData);
+        axios.post('http://localhost:5175/product/insert', formData);
 
       console.log('Product added successfully', formData);
 

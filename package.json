@@ -1,6 +1,7 @@
 {
   "name": "e-commerce-product-listing-frontend",
   "private": true,
+  "proxy" : "http://localhost:5175",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

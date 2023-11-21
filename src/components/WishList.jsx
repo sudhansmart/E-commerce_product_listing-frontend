@@ -1,27 +1,25 @@
+// Wishlist.js
 import React, { useState, useEffect } from 'react';
 import { Card, Button } from 'react-bootstrap';
-import '../styles/wishlist.css'
+import '../styles/wishlist.css';
+
 function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
-    // Assuming you have an API endpoint to fetch user's wishlist
-    // Replace 'http://localhost:5000/api/wishlist' with your actual API endpoint
-    fetch('http://localhost:5000/api/wishlist')
+    fetch('http://localhost:5175/wishlist/1') // Assuming the user ID is 1 for testing
       .then((response) => response.json())
       .then((data) => setWishlist(data))
       .catch((error) => console.error('Error fetching wishlist:', error));
   }, []);
 
   const handleRemoveFromWishlist = (productId) => {
-    // Assuming you have an API endpoint to remove a product from the wishlist
-    // Replace 'http://localhost:5000/api/removeFromWishlist' with your actual API endpoint
-    fetch(`http://localhost:5000/api/removeFromWishlist/${productId}`, {
+    fetch(`http://localhost:5175/wishlist/1/${productId}`, { // Assuming the user ID is 1 for testing
       method: 'DELETE',
     })
       .then((response) => {
         if (response.ok) {
-          setWishlist((prevWishlist) => prevWishlist.filter((product) => product.id !== productId));
+          setWishlist((prevWishlist) => prevWishlist.filter((product) => product._id !== productId));
         } else {
           console.error('Failed to remove product from wishlist');
         }
@@ -37,7 +35,7 @@ function Wishlist() {
       ) : (
         <div className="row">
           {wishlist.map((product) => (
-            <div key={product.id} className="col-md-4" style={{ marginBottom: '20px' }}>
+            <div key={product._id} className="col-md-4" style={{ marginBottom: '20px' }}>
               <Card>
                 <Card.Img variant="top" src={product.image} />
                 <Card.Body>
@@ -45,7 +43,7 @@ function Wishlist() {
                   <Card.Text>${product.price}</Card.Text>
                   <Button
                     variant="danger"
-                    onClick={() => handleRemoveFromWishlist(product.id)}
+                    onClick={() => handleRemoveFromWishlist(product._id)}
                   >
                     Remove from Wishlist
                   </Button>

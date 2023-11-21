@@ -1,10 +1,9 @@
 import React from 'react';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping, faStore, faUser } from '@fortawesome/free-solid-svg-icons';
-import "../styles/navbar.css"
+import { faStore, faUser } from '@fortawesome/free-solid-svg-icons';
 
-function NavBar({ onLogout, onLogin }) {
+function UserDashBoard({ userName }) {
   return (
     <Navbar expand="lg" className="nav-bar">
       <Container>
@@ -15,13 +14,12 @@ function NavBar({ onLogout, onLogin }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/branches" ><FontAwesomeIcon icon={faStore} />Stores</Nav.Link>
-            {onLogin ? <Nav.Link href="#link"><FontAwesomeIcon icon={faCartShopping} />Cart</Nav.Link> : ""}
+            <Nav.Link href="/wishlist" ><FontAwesomeIcon icon={faStore} />WishList</Nav.Link>
             <NavDropdown title={<FontAwesomeIcon icon={faUser} />}>
-              <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-              <NavDropdown.Item href="/signup">SignUp</NavDropdown.Item>
+              <NavDropdown.Item href="/login">Welcome, {userName}</NavDropdown.Item>
+              <NavDropdown.Item href="/login">Logout</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="/contact">Contact Us</NavDropdown.Item>
-            
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
@@ -30,4 +28,4 @@ function NavBar({ onLogout, onLogin }) {
   );
 }
 
-export default NavBar;
+export default UserDashBoard;

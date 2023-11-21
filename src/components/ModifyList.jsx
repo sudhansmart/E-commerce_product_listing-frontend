@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Modal, Form } from 'react-bootstrap';
-import '../styles/modifyList.css';
 import axios from 'axios';
 
 function ModifyList() {
@@ -11,7 +10,7 @@ function ModifyList() {
     quantity: '',
     description: '',
     category: '',
-    subcategory:'',
+    subcategory: '',
     size: '',
     releasedate: '',
     imagelink: '',
@@ -23,15 +22,27 @@ function ModifyList() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const fetchDataFromServer = async () => {
+    try {
+      const response = await axios.get('http://localhost:5175/product/data');
+      if (response.status === 200) {
+        setProducts(response.data);
+      } else {
+        console.error('Failed to fetch data from the server');
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching data:', error);
+    }
+  };
+
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then((data) => data.json())
-      .then((result) => setProducts(result));
+    fetchDataFromServer();
   }, []);
 
   const handleEdit = (product) => {
     setSelectedProduct(product);
     setShowEditModal(true);
+    setFormData(product);
   };
 
   const handleDelete = (product) => {
@@ -41,18 +52,15 @@ function ModifyList() {
 
   const handleEditSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${selectedProduct.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selectedProduct),
-      });
-
-      if (response.ok) {
+      const response = await axios.put(
+        `http://localhost:5175/product/${selectedProduct._id}`,
+        formData
+      );
+  
+      if (response.status === 200) {
         setProducts((prevProducts) =>
           prevProducts.map((product) =>
-            product.id === selectedProduct.id ? selectedProduct : product
+            product._id === selectedProduct._id ? formData : product
           )
         );
         setShowEditModal(false);
@@ -62,19 +70,26 @@ function ModifyList() {
     } catch (error) {
       console.error('Error updating product:', error);
     }
+    console.log("save clicked");
   };
+  
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${selectedProduct.id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
+      console.log("Deleting product:", selectedProduct);
+  
+      const response = await axios.delete(
+        `http://localhost:5175/product/${selectedProduct._id}`
+      );
+  
+      console.log("Delete response:", response);
+  
+      if (response.status === 204) {
         setProducts((prevProducts) =>
-          prevProducts.filter((product) => product.id !== selectedProduct.id)
+          prevProducts.filter((product) => product._id !== selectedProduct._id)
         );
         setShowDeleteModal(false);
+        setSelectedProduct(null); // Set selectedProduct to null after successful deletion
       } else {
         console.error('Failed to delete product');
       }
@@ -82,38 +97,59 @@ function ModifyList() {
       console.error('Error deleting product:', error);
     }
   };
+  
 
   const handleCloseModal = () => {
     setShowEditModal(false);
     setShowDeleteModal(false);
     setSelectedProduct(null);
+    setFormData({
+      productname: '',
+      price: '',
+      weight: '',
+      quantity: '',
+      description: '',
+      category: '',
+      subcategory: '',
+      size: '',
+      releasedate: '',
+      imagelink: '',
+      productspec: '',
+    });
   };
 
+ 
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
-    setSelectedProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
+  
 
   return (
     <div className="modifylist-container">
       <div className="row">
         {products.map((product) => (
-          <div className="col-md-3" key={product.id} style={{ marginBottom: '10px' }}>
+          <div className="col-md-3" key={product._id} style={{ marginBottom: '10px' }}>
             <Card className="h-100">
               <div className="text-center">
                 <Card.Img
                   variant="top"
-                  src={product.image}
+                  src={product.imagelink}
                   style={{ width: '100px', height: '130px', padding: '5px' }}
                 />
               </div>
               <Card.Body>
-                <Card.Title>{product.title}</Card.Title>
-                <Card.Text style={{ display: 'flex', justifyContent: 'flex-end', fontWeight: '700' }}>
+                <Card.Title>{product.productname}</Card.Title>
+                <Card.Text
+                  style={{ display: 'flex', justifyContent: 'flex-end', fontWeight: '700' }}
+                >
                   {product.price}
                 </Card.Text>
               </Card.Body>
-              <Card.Footer className="bg-white" style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              <Card.Footer
+                className="bg-white"
+                style={{ display: 'flex', justifyContent: 'space-evenly' }}
+              >
                 <Button variant="info" onClick={() => handleEdit(product)}>
                   Edit
                 </Button>
@@ -133,12 +169,12 @@ function ModifyList() {
         </Modal.Header>
         <Modal.Body>
           <Form>
-          <Form.Group controlId="formTitle">
+            <Form.Group controlId="formTitle">
               <Form.Label>Product Name</Form.Label>
               <Form.Control
                 type="text"
                 name="productname"
-                value={formData.productname}
+                value={selectedProduct ? selectedProduct.productname : ''}
                 onChange={handleEditInputChange}
               />
             </Form.Group>
@@ -265,7 +301,7 @@ function ModifyList() {
           <Modal.Title>Delete Product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete the product: {selectedProduct?.title}?
+          Are you sure you want to delete the product: {selectedProduct?.productname}?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
